@@ -1,20 +1,22 @@
-import { TaskService } from "../TaskService";
-import { ITaskRepository } from "../../repositories";
-import { Task, TaskStatus } from "../../entinties";
-import { AppError } from "../../../../core/errors";
+import { TaskService } from "../../../modules/task/services/TaskService";
+import { ITaskRepository } from "../../../modules/task/repositories";
+import { Task, TaskStatus } from "../../../modules/task/entinties";
+import { AppError } from "../../errors";
+import { mockTaskRepository } from "../../__mocks__/TaskRepository";
 
-const mockRepository = (): jest.Mocked<ITaskRepository> => ({
-    create: jest.fn(),
-    findById: jest.fn(),
-    findAll: jest.fn(),
-    findByStatus: jest.fn(),
-    update: jest.fn(),
-    delete: jest.fn(),
-})
+// const mockRepository = (): jest.Mocked<ITaskRepository> => ({
+//     create: jest.fn(),
+//     findById: jest.fn(),
+//     findAll: jest.fn(),
+//     findByStatus: jest.fn(),
+//     update: jest.fn(),
+//     delete: jest.fn(),
+// })
 
 describe("TaskService - createTask", () => {
     it("should create a task successfully", async () => {
-        const repository = mockRepository();
+        // const repository = mockRepository();
+        const repository = mockTaskRepository
         const service = new TaskService(repository);
 
         const task = new Task(
@@ -37,7 +39,7 @@ describe("TaskService - createTask", () => {
     });
 
     it("should throw error if title is too short", async () => {
-        const repository = mockRepository();
+        const repository = mockTaskRepository;
         const service = new TaskService(repository);
 
         await expect(
@@ -49,7 +51,7 @@ describe("TaskService - createTask", () => {
     })
 
     it("should update task status to DONE", async () => {
-        const repository = mockRepository();
+        const repository = mockTaskRepository;
         const service = new TaskService(repository);
 
         const task = new Task(
@@ -69,7 +71,7 @@ describe("TaskService - createTask", () => {
     })
 
     it("should throw error if task not found", async () => {
-        const repository = mockRepository();
+        const repository = mockTaskRepository;
         const service = new TaskService(repository);
 
         repository.findById.mockResolvedValue(null);

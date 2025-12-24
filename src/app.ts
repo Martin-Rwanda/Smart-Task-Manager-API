@@ -1,5 +1,7 @@
 import express from 'express'; 
 import cors from 'cors'; 
+import { authRouter } from './modules/auth/routes';
+import { userRoutes } from './modules/user/routes';
 import { taskRoutes } from './modules/task/routes'; 
 import { errorHandler } from './core/errors'; 
 import helmet from 'helmet'; 
@@ -11,6 +13,8 @@ app.use(cors());
 app.use(express.json()); 
 app.use(errorHandler) 
 
+app.use('/auth', authRouter);
+app.use('/users', userRoutes)
 app.use('/tasks', taskRoutes); 
 app.use( 
     rateLimit({ 

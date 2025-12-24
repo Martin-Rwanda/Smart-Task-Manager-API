@@ -34,4 +34,12 @@ export class TaskController {
 
         return succcessResponse(res, task, 201)
     }
+
+    deleteTask = async (req:Request, res:Response) => {
+        const {id} = req.params;
+
+        const task = await this.service.delete(id)
+
+        return succcessResponse(res, task, 200)
+    }
 }
