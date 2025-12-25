@@ -34,15 +34,3 @@ export class AuthService {
         return { token };
     }
 }
-
-const blacklistedTokens = new Set<string>();
-
-export class LogoutService {
-    static addTokenToBlacklist(token: string) {
-        blacklistedTokens.add(token);
-    }
-
-    static isBlacklisted(token: string) {
-        return blacklistedTokens.has(token);
-    }
-}

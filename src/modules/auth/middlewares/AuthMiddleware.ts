@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { JwtPayload, JwtService, LogoutService } from "../services";
+import { AppJwtPayload, JwtService, logoutService } from "../services";
 import { AppError } from "../../../core/errors";
 import { Role } from "../types";
 
@@ -11,7 +11,7 @@ export interface AuthRequest extends Request {
 }
 
 
-export const authMiddleware = (
+export const authMiddleware = async (
     req: AuthRequest,
     res: Response,
     next: NextFunction
@@ -34,12 +34,15 @@ export const authMiddleware = (
 
     const token = header.split(" ")[1];
 
-    if (LogoutService.isBlacklisted(token)) {
-        return res.status(401).json({ success: false, message: "Token is revoked" });
+    if (await logoutService.isBlacklisted(token)) {
+        return res.status(401).json({
+            success: false,
+            message: "Token revoked",
+        });
     }
 
     try {
-        const payload: JwtPayload = JwtService.verify(token);
+        const payload: AppJwtPayload = JwtService.verify(token);
         req.user = payload;
         next();
     } catch {
