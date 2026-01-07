@@ -1,0 +1,66 @@
+version: "3.9"
+
+services:
+  api:
+    build: .
+    ports:
+      - "4000:3000"
+    env_file:
+      - .env
+    depends_on:
+      - db:
+        condition: service_healthy
+
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: smart_task_manager
+      POSTGRES_USER: martin
+      POSTGRES_PASSWORD: 02011997
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U martin"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+
+
+
+
+  # production 
+
+# version: "3.9"
+
+# services:
+#   api:
+#     image: smart-task-api:1.0
+#     restart: always
+#     env_file:
+#       - .env.production
+#     ports:
+#       - "3000:3000"
+#     depends_on:
+#       db:
+#         condition: service_healthy
+
+#   db:
+#     image: postgres:15
+#     restart: always
+#     environment:
+#       POSTGRES_DB: smart_task_manager
+#       POSTGRES_USER: martin
+#       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+#     volumes:
+#       - postgres_data:/var/lib/postgresql/data
+#     healthcheck:
+#       test: ["CMD-SHELL", "pg_isready -U martin"]
+#       interval: 10s
+#       timeout: 5s
+#       retries: 5
+
+# volumes:
+#   postgres_data:
